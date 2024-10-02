@@ -8,13 +8,14 @@ namespace Snake
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private GameManager _gameManager;
+        
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Globals.Content = Content;
-            Globals.SpriteBatch = _spriteBatch;
+            
             
             IsMouseVisible = true;
         }
@@ -22,6 +23,7 @@ namespace Snake
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Contents.Content = Content;
 
             base.Initialize();
         }
@@ -29,6 +31,10 @@ namespace Snake
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Globals.SpriteBatch = _spriteBatch;
+            Contents.Init();
+            _gameManager = new GameManager();
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -39,6 +45,7 @@ namespace Snake
                 Exit();
 
             // TODO: Add your update logic here
+            _gameManager.Update();
 
             base.Update(gameTime);
         }
@@ -48,8 +55,10 @@ namespace Snake
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            _spriteBatch.Begin();
+            _gameManager.Draw();
             base.Draw(gameTime);
+            _spriteBatch.End();
         }
     }
 }

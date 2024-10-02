@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +9,26 @@ using System.Threading.Tasks;
 namespace Snake
 {
     public enum TextureName { Snake}
-    internal class Contents
+    internal static class Contents
     {
+        public static ContentManager Content { get; set; }
 
-        private Texture2D _snakeTexture;
-        public Dictionary<TextureName, Texture2D> TextureDict { get; private set; } = new Dictionary<TextureName, Texture2D>();
+        private static Texture2D _snakeTexture;
+        public static Dictionary<TextureName, Texture2D> TextureDict { get; private set; } = new Dictionary<TextureName, Texture2D>();
         
-        public Contents()
+        static Contents()
         {
-            _snakeTexture = Globals.Content.Load<Texture2D>("Art/Snake/snake");
-            TextureDict.Add(TextureName.Snake, _snakeTexture);
             
+            
+        }
+        public static void Init()
+        {
+            _snakeTexture = Content.Load<Texture2D>("Art/Snake/snake");
+            TextureDict.Add(TextureName.Snake, _snakeTexture);
+        }
+        public static Texture2D GetTexture2D(TextureName name)
+        {
+            return TextureDict[name];
         }
     }
 }

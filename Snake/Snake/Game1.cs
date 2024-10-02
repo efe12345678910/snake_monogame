@@ -13,6 +13,9 @@ namespace Snake
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            Globals.Content = Content;
+            Globals.SpriteBatch = _spriteBatch;
+            
             IsMouseVisible = true;
         }
 

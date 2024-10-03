@@ -22,7 +22,8 @@ namespace Snake
         }
         public void Draw()
         {
-            Globals.SpriteBatch.Draw(Snake.Texture, Snake.Position, Microsoft.Xna.Framework.Color.White);
+            //Globals.SpriteBatch.Draw(Snake.Texture, Snake.Position, Microsoft.Xna.Framework.Color.White);
+            Snake.Draw();
         }
         public void Update()
         {

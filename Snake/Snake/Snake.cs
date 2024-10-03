@@ -18,15 +18,27 @@ namespace Snake
         private float _movementInterval = 0.5f;
         private float _lastMovementTime;
         private bool _isMovementInProgress=true;
-        public Vector2 Position { get; private set; }
+        public int SnakeLength { get; private set; }
+        private int _snakeStartingLenght = 3;
+        public Vector2 PositionHead { get; private set; }
+        public List<Vector2> Positions { get; private set; } = new List<Vector2>() { new Vector2(20,0),new Vector2(10,0),new Vector2(0,0)};
         public Snake(Level level)
         {
             Texture = Contents.GetTexture2D(TextureName.Snake);
+            SnakeLength = _snakeStartingLenght;
+            PositionHead = new Vector2(20,0);
             _level = level;
             _lastMovementTime = Globals.Time;
             InputManager.RightArrowPressed += TurnRight;
             InputManager.LeftArrowPressed += TurnLeft;
 
+        }
+        public void Draw()
+        {
+            for (int i = 0; i<Positions.Count; i++)
+            {
+                Globals.SpriteBatch.Draw(Texture, Positions[i], Microsoft.Xna.Framework.Color.White);
+            }
         }
         public void Update()
         {
@@ -37,25 +49,28 @@ namespace Snake
             }
             
         }
+        //Take care that positive Y coordinate means down in Monogame
         public void MoveForward()
         {
             switch (_currentDirection)
             {
                 case DirectionFacing.Up:
-                    Position -= new Vector2(0, _level.GridSize.Y);
+                    PositionHead -= new Vector2(0, _level.GridSize.Y);
                     break;
                 case DirectionFacing.Down:
-                    Position += new Vector2(0, _level.GridSize.Y);
+                    PositionHead += new Vector2(0, _level.GridSize.Y);
                     break;
                 case DirectionFacing.Right:
-                    Position += new Vector2(_level.GridSize.X, 0);
+                    PositionHead += new Vector2(_level.GridSize.X, 0);
                     break;
                 case DirectionFacing.Left:
-                    Position -= new Vector2(_level.GridSize.X, 0);
+                    PositionHead -= new Vector2(_level.GridSize.X, 0);
                     break;
                 default:
                     break;
             }
+            Positions.Insert(0, PositionHead);
+            Positions.RemoveAt(Positions.Count - 1);
         }
         public void TurnLeft()
         {

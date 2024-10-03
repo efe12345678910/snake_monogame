@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace Snake
         public static bool IsLeftArrowPressed { get; private set; }
         public static Action RightArrowPressed { get;  set; }
         public static Action LeftArrowPressed { get;  set; }
+        public static Action RKeyPressed { get; set; }
         public static void Update()
         {
             IsRightArrowPressed = Keyboard.GetState().IsKeyDown(Keys.Right) && _lastKeyboardState.IsKeyUp(Keys.Right);
@@ -26,7 +28,14 @@ namespace Snake
             {
                 LeftArrowPressed?.Invoke();
             }
+            if(Keyboard.GetState().IsKeyDown(Keys.R) && _lastKeyboardState.IsKeyUp(Keys.R))
+            {
+                RKeyPressed?.Invoke();
+                Console.WriteLine();
+            }
             _lastKeyboardState = Keyboard.GetState();
+            
         }
+        
     }
 }

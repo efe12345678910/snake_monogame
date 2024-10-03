@@ -12,6 +12,7 @@ namespace Snake
         public GameManager()
         {
             Level = new Level();
+            InputManager.RKeyPressed += Restart;
         }
 
         public void Update()
@@ -22,6 +23,11 @@ namespace Snake
         public void Draw()
         {
             Level.Draw();
+        }
+        public void Restart()
+        {
+            InputManager.RKeyPressed -= Restart;
+            Level = new Level();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Snake
         }
         public static void Init()
         {
-            _snakeTexture = Content.Load<Texture2D>("Art/Snake/snake_front");
+            _snakeTexture = Content.Load<Texture2D>("Art/Snake/snake");
             TextureDict.Add(TextureName.Snake, _snakeTexture);
         }
         public static Texture2D GetTexture2D(TextureName name)

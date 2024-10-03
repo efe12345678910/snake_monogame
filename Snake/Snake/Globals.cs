@@ -11,6 +11,7 @@ namespace Snake
     static class Globals
     {
         public static SpriteBatch SpriteBatch { get; set; }
+        public static float Time { get; set; }
 
     }
 }

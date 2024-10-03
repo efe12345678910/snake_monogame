@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace Snake
 {
@@ -46,8 +47,10 @@ namespace Snake
 
             // TODO: Add your update logic here
             _gameManager.Update();
-
+            
             base.Update(gameTime);
+            Globals.Time = (float)gameTime.TotalGameTime.TotalSeconds;
+            
         }
 
         protected override void Draw(GameTime gameTime)

@@ -8,19 +8,20 @@ namespace Snake
 {
     internal class GameManager
     {
-        public Snake Snake { get; private set; }
+        public Level Level { get; private set; }
         public GameManager()
         {
-            Snake = new Snake();
+            Level = new Level();
         }
 
         public void Update()
         {
-
+            InputManager.Update();
+            Level.Update();
         }
         public void Draw()
         {
-            Globals.SpriteBatch.Draw(Snake.Texture, Snake.Position, Microsoft.Xna.Framework.Color.White);
+            Level.Draw();
         }
     }
 }

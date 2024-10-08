@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +21,9 @@ namespace Snake
         public int SnakeLength { get; private set; }
         private int _snakeStartingLenght = 3;
         public Vector2 PositionHead { get; private set; }
-        public List<Vector2> Positions { get; private set; } = new List<Vector2>() { new Vector2(20,0),new Vector2(10,0),new Vector2(0,0)};
+        public Rectangle SnakeHead { get; private set; }
+        public List<Rectangle> SnakeParts { get; private set; } = new List<Rectangle>();
+        public List<Vector2> Positions { get; private set; } = new List<Vector2>();
         public Snake(Level level)
         {
             Texture = Contents.GetTexture2D(TextureName.Snake);
@@ -29,9 +31,31 @@ namespace Snake
             PositionHead = new Vector2(20,0);
             _level = level;
             _lastMovementTime = Globals.Time;
+            SnakeHead = new Rectangle(PositionHead.ToPoint(), _level.GridSize.ToPoint());
+            InitializePositionsAndRects();
             InputManager.RightArrowPressed += TurnRight;
             InputManager.LeftArrowPressed += TurnLeft;
 
+        }
+        private void InitializePositionsAndRects()
+        {
+            Positions.Insert(0, new Vector2(0,0));
+            Positions.Insert(0, new Vector2(10, 0));
+            Positions.Insert(0, PositionHead);
+            for (int i=0; i < SnakeLength; i++)
+            {
+                SnakeParts.Insert(0,new Rectangle(Positions[i].ToPoint(), _level.GridSize.ToPoint()));
+            }
+        }
+        private void CheckCollision()
+        {
+            foreach (Rectangle part in SnakeParts)
+            {
+                if (part != SnakeHead && SnakeHead.Intersects(part))
+                {
+                    Debug.WriteLine("GAME OVER!");
+                }
+            }
         }
         public void Draw()
         {
@@ -42,13 +66,16 @@ namespace Snake
         }
         public void Update()
         {
-            if(Globals.Time - _lastMovementTime >= _movementInterval)
+            SnakeHead = new Rectangle(PositionHead.ToPoint(), _level.GridSize.ToPoint());
+            if (Globals.Time - _lastMovementTime >= _movementInterval)
             {
                 MoveForward();
                 _lastMovementTime = Globals.Time;
             }
-            
+            CheckCollision();
+
         }
+        
         //Take care that positive Y coordinate means down in Monogame
         public void MoveForward()
         {

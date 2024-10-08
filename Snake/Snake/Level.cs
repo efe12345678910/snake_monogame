@@ -16,7 +16,24 @@ namespace Snake
         private readonly int _levelRows;
         private readonly int _levelColumns;
         private readonly Texture2D _wallTexture;
+        private readonly Random random;
         public  Rectangle GameArena { get; }
+        private void CreateFood()
+        {
+            int a = random.Next(0, (int)GameArena.Width / (int)GridSize.X);
+            int b = random.Next(0, (int)GameArena.Height / (int)GridSize.Y);
+            Vector2 position = new Vector2(a*GridSize.X, b * GridSize.Y);
+            //If snake is at the position , find another position (we do not want to create the food on the snake)
+            if (Snake.Positions.Contains(position))
+            {
+                CreateFood();
+            }
+            else
+            {
+                Debug.WriteLine(position+" food will be created");
+            }
+
+        }
         
         private void DrawBackground()
         {
@@ -24,12 +41,14 @@ namespace Snake
         }
         public Level()
         {
+            random = new();
             _wallTexture = Contents.GetTexture2D(TextureName.Wall);
             _levelRows = Globals.SpriteBatch.GraphicsDevice.Viewport.Width / (int)GridSize.X;
             _levelColumns = Globals.SpriteBatch.GraphicsDevice.Viewport.Height / (int)GridSize.Y;
             GameArena = new Rectangle(GridSize.ToPoint().X,GridSize.ToPoint().Y, Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Width-(int)GridSize.X*2,Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Height-(int)GridSize.Y *2);
             Snake = new Snake(this);
         }
+
         public void Draw()
         {
             DrawBackground();

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,22 +13,45 @@ namespace Snake
     {
         public Snake Snake { get; private set; }
         public Vector2 GridSize { get; } = new Vector2(10,10);
-        private readonly int _levelRows = 50;
-        private readonly int _levelColumns = 50;
-
+        private readonly int _levelRows;
+        private readonly int _levelColumns;
+        private readonly Texture2D _wallTexture;
+        public  Rectangle GameArena { get; }
+        
+        private void DrawBackground()
+        {
+            Globals.SpriteBatch.Draw(_wallTexture, GameArena, Color.White);
+        }
         public Level()
         {
+            _wallTexture = Contents.GetTexture2D(TextureName.Wall);
+            _levelRows = Globals.SpriteBatch.GraphicsDevice.Viewport.Width / (int)GridSize.X;
+            _levelColumns = Globals.SpriteBatch.GraphicsDevice.Viewport.Height / (int)GridSize.Y;
+            GameArena = new Rectangle(GridSize.ToPoint().X,GridSize.ToPoint().Y, Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Width-(int)GridSize.X*2,Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Height-(int)GridSize.Y *2);
             Snake = new Snake(this);
-            //Setting gridSize to snake's texture size so that everything will be based on the snake's texture size
         }
         public void Draw()
         {
-            //Globals.SpriteBatch.Draw(Snake.Texture, Snake.Position, Microsoft.Xna.Framework.Color.White);
+            DrawBackground();
             Snake.Draw();
         }
         public void Update()
         {
             Snake.Update();
+        }
+        [Obsolete("This method is deprecated, use DrawBackground instead.This method draws the walls of the level piece by piece so it is not well optimized.")]
+        private void DrawS()
+        {
+            for (int i = 0; i < _levelRows; i++)
+            {
+                Globals.SpriteBatch.Draw(_wallTexture, new Vector2(i * GridSize.X, 0), Color.White);
+                Globals.SpriteBatch.Draw(_wallTexture, new Vector2(i * GridSize.X, (_levelColumns - 1) * GridSize.Y), Color.White);
+            }
+            for (int i = 0; i < _levelColumns; i++)
+            {
+                Globals.SpriteBatch.Draw(_wallTexture, new Vector2(0, i * GridSize.Y), Color.White);
+                Globals.SpriteBatch.Draw(_wallTexture, new Vector2(GridSize.X * (_levelRows - 1), i * GridSize.Y), Color.White);
+            }
         }
     }
 }

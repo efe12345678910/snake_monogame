@@ -20,7 +20,7 @@ namespace Snake
         private bool _hasAlreadyTurned = false;
         public int SnakeLength { get; private set; }
         private int _snakeStartingLenght = 5;
-        private Vector2 _startingPosition = new Vector2(40, 0);
+        private Vector2 _startingPosition = new Vector2(60, 10);
         public Vector2 PositionHead { get; private set; }
         public List<Rectangle> SnakeParts { get; private set; } = new List<Rectangle>();
         public List<Vector2> Positions { get; private set; } = new List<Vector2>();
@@ -52,7 +52,7 @@ namespace Snake
             //We do not check for the last item of the SnakeParts list because it is the head and we do not want to see whether the rectangle of the head intersects with itself
             for (int i = 0; i < SnakeParts.Count-1; i++)
             {
-                if (SnakeParts[i].Intersects(SnakeParts[SnakeParts.Count - 1]))
+                if (SnakeParts[i].Intersects(SnakeParts[SnakeParts.Count - 1])|| !_level.GameArena.Contains(SnakeParts[SnakeParts.Count - 1]))
                 {
                     Debug.WriteLine("GAME OVER!");
                 }

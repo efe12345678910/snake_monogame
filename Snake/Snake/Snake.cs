@@ -22,7 +22,6 @@ namespace Snake
         private int _snakeStartingLenght = 5;
         private Vector2 _startingPosition = new Vector2(40, 0);
         public Vector2 PositionHead { get; private set; }
-        public Rectangle SnakeHead { get; private set; }
         public List<Rectangle> SnakeParts { get; private set; } = new List<Rectangle>();
         public List<Vector2> Positions { get; private set; } = new List<Vector2>();
         public Snake(Level level)
@@ -32,7 +31,6 @@ namespace Snake
             PositionHead = _startingPosition;
             _level = level;
             _lastMovementTime = Globals.Time;
-            SnakeHead = new Rectangle(PositionHead.ToPoint(), _level.GridSize.ToPoint());
             InitializePositionsAndRects();
             InputManager.RightArrowPressed += TurnRight;
             InputManager.LeftArrowPressed += TurnLeft;
@@ -46,14 +44,15 @@ namespace Snake
             }
             for (int i=0; i < SnakeLength; i++)
             {
-                SnakeParts.Insert(0,new Rectangle(Positions[i].ToPoint(), _level.GridSize.ToPoint()));
+                SnakeParts.Insert(0, new Rectangle(Positions[i].ToPoint(), _level.GridSize.ToPoint()));
             }
         }
         private void CheckCollision()
         {
-            foreach (Rectangle part in SnakeParts)
+            //We do not check for the last item of the SnakeParts list because it is the head and we do not want to see whether the rectangle of the head intersects with itself
+            for (int i = 0; i < SnakeParts.Count-1; i++)
             {
-                if (part != SnakeHead && SnakeHead.Intersects(part))
+                if (SnakeParts[i].Intersects(SnakeParts[SnakeParts.Count - 1]))
                 {
                     Debug.WriteLine("GAME OVER!");
                 }
@@ -68,13 +67,11 @@ namespace Snake
         }
         public void Update()
         {
-            SnakeHead = new Rectangle(PositionHead.ToPoint(), _level.GridSize.ToPoint());
             if (Globals.Time - _lastMovementTime >= _movementInterval)
             {
                 MoveForward();
                 _lastMovementTime = Globals.Time;
             }
-            CheckCollision();
         }
         
         //Take care that positive Y coordinate means down in Monogame
@@ -99,6 +96,11 @@ namespace Snake
             }
             Positions.RemoveAt(0);
             Positions.Insert(Positions.Count,PositionHead);
+            for(int i = 0; i<Positions.Count; i++)
+            {
+                SnakeParts[i] = new Rectangle(Positions[i].ToPoint(), _level.GridSize.ToPoint());
+            }
+            CheckCollision();
             _hasAlreadyTurned = false;
         }
         public void TurnLeft()

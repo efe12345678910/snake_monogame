@@ -17,7 +17,7 @@ namespace Snake
         private DirectionFacing _currentDirection =DirectionFacing.Right;
         private float _movementInterval = 0.5f;
         private float _lastMovementTime;
-        private bool _isMovementInProgress=true;
+        private bool _hasAlreadyTurned = false;
         public int SnakeLength { get; private set; }
         private int _snakeStartingLenght = 3;
         public Vector2 PositionHead { get; private set; }
@@ -73,7 +73,6 @@ namespace Snake
                 _lastMovementTime = Globals.Time;
             }
             CheckCollision();
-
         }
         
         //Take care that positive Y coordinate means down in Monogame
@@ -98,20 +97,23 @@ namespace Snake
             }
             Positions.Insert(0, PositionHead);
             Positions.RemoveAt(Positions.Count - 1);
+            _hasAlreadyTurned = false;
         }
         public void TurnLeft()
         {
-            _currentDirection = (DirectionFacing)((int)(_currentDirection + 1) % 4);
-            Debug.WriteLine("turn left");
-            Debug.WriteLine($"{_currentDirection}");
-            Debug.WriteLine($"{_level.GridSize.Y}");
-
+            if (!_hasAlreadyTurned)
+            {
+                _currentDirection = (DirectionFacing)((int)(_currentDirection + 1) % 4);
+            }
+            _hasAlreadyTurned = true;
         }
         public void TurnRight()
         {
-            _currentDirection = (DirectionFacing)((int)(_currentDirection - 1+4) % 4);
-            Debug.WriteLine("turn right");
-            Debug.WriteLine($"{_currentDirection}");
+            if (!_hasAlreadyTurned)
+            {
+                _currentDirection = (DirectionFacing)((int)(_currentDirection - 1 + 4) % 4);
+            }
+            _hasAlreadyTurned = true;
         }
 
     }

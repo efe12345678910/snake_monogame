@@ -10,7 +10,7 @@ namespace Snake
     class Level
     {
         public Snake Snake { get; private set; }
-        public  Vector2 GridSize { get; }
+        public Vector2 GridSize { get; } = new Vector2(10,10);
         private readonly int _levelRows = 50;
         private readonly int _levelColumns = 50;
 
@@ -18,7 +18,6 @@ namespace Snake
         {
             Snake = new Snake(this);
             //Setting gridSize to snake's texture size so that everything will be based on the snake's texture size
-            GridSize = Snake.Texture.Bounds.Size.ToVector2();
         }
         public void Draw()
         {

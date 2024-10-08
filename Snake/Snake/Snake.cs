@@ -19,7 +19,8 @@ namespace Snake
         private float _lastMovementTime;
         private bool _hasAlreadyTurned = false;
         public int SnakeLength { get; private set; }
-        private int _snakeStartingLenght = 3;
+        private int _snakeStartingLenght = 5;
+        private Vector2 _startingPosition = new Vector2(40, 0);
         public Vector2 PositionHead { get; private set; }
         public Rectangle SnakeHead { get; private set; }
         public List<Rectangle> SnakeParts { get; private set; } = new List<Rectangle>();
@@ -28,7 +29,7 @@ namespace Snake
         {
             Texture = Contents.GetTexture2D(TextureName.Snake);
             SnakeLength = _snakeStartingLenght;
-            PositionHead = new Vector2(20,0);
+            PositionHead = _startingPosition;
             _level = level;
             _lastMovementTime = Globals.Time;
             SnakeHead = new Rectangle(PositionHead.ToPoint(), _level.GridSize.ToPoint());
@@ -39,9 +40,10 @@ namespace Snake
         }
         private void InitializePositionsAndRects()
         {
-            Positions.Insert(0, new Vector2(0,0));
-            Positions.Insert(0, new Vector2(10, 0));
-            Positions.Insert(0, PositionHead);
+            for(int i = 0; i < SnakeLength; i++)
+            {
+                Positions.Insert(0, new Vector2(PositionHead.X - i * _level.GridSize.X, PositionHead.Y));
+            }
             for (int i=0; i < SnakeLength; i++)
             {
                 SnakeParts.Insert(0,new Rectangle(Positions[i].ToPoint(), _level.GridSize.ToPoint()));
@@ -95,8 +97,8 @@ namespace Snake
                 default:
                     break;
             }
-            Positions.Insert(0, PositionHead);
-            Positions.RemoveAt(Positions.Count - 1);
+            Positions.RemoveAt(0);
+            Positions.Insert(Positions.Count,PositionHead);
             _hasAlreadyTurned = false;
         }
         public void TurnLeft()

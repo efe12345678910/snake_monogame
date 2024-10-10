@@ -13,7 +13,8 @@ namespace Snake
         {
             Play,
             Pause,
-            GameOver
+            GameOver,
+            Intro
         }
         public static  Dictionary<GameStateEnum,GameState> gameStates = new Dictionary<GameStateEnum, GameState>();
         static GameStateManager()
@@ -21,6 +22,7 @@ namespace Snake
             gameStates.Add(GameStateEnum.Play, new PlayState());
             gameStates.Add(GameStateEnum.Pause, new PauseState());
             gameStates.Add(GameStateEnum.GameOver, new GameOverState());
+            gameStates.Add(GameStateEnum.Intro, new IntroMenuState());
         }
     }
 }

@@ -11,14 +11,20 @@ namespace Snake
     internal static class InputManager
     {
         private static KeyboardState _lastKeyboardState;
+        private static MouseState _lastMouseState;
         public static bool IsRightArrowPressed { get; private set; }
         public static bool IsLeftArrowPressed { get; private set; }
         public static Action RightArrowPressed { get;  set; }
         public static Action LeftArrowPressed { get;  set; }
+        public static Action LMBClicked { get; set; }
         public static Action RKeyPressed { get; set; }
         public static Action PauseKeyPressed { get; set; }
         public static void Update()
         {
+            if(Mouse.GetState().LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released)
+            {
+                LMBClicked?.Invoke();
+            }
             IsRightArrowPressed = Keyboard.GetState().IsKeyDown(Keys.Right) && _lastKeyboardState.IsKeyUp(Keys.Right);
             if(IsRightArrowPressed)
             {
@@ -38,6 +44,7 @@ namespace Snake
                 PauseKeyPressed?.Invoke();
             }
             _lastKeyboardState = Keyboard.GetState();
+            _lastMouseState = Mouse.GetState();
             
         }
         

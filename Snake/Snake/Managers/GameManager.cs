@@ -13,7 +13,7 @@ namespace Snake
         public Level Level { get; private set; }
         public GameManager()
         {
-            ChangeState(GameStateManager.GameStateEnum.Play);
+            ChangeState(GameStateManager.GameStateEnum.Intro);
             Level = new Level(this);
             InputManager.RKeyPressed += Restart;
             InputManager.PauseKeyPressed += PauseTheGame;

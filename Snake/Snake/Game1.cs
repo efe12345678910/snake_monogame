@@ -9,8 +9,8 @@ namespace Snake
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private GameManager _gameManager;
-        
+        internal GameManager GameManager { get; private set; }
+
 
         public Game1()
         {
@@ -19,6 +19,7 @@ namespace Snake
             
             
             IsMouseVisible = true;
+            Globals.Game = this;
         }
 
         protected override void Initialize()
@@ -34,7 +35,7 @@ namespace Snake
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Globals.SpriteBatch = _spriteBatch;
             Contents.Init();
-            _gameManager = new GameManager();
+            GameManager = new GameManager();
 
 
             // TODO: use this.Content to load your game content here
@@ -46,7 +47,7 @@ namespace Snake
                 Exit();
 
             // TODO: Add your update logic here
-            _gameManager.Update();
+            GameManager.Update();
             
             base.Update(gameTime);
             Globals.Time = (float)gameTime.TotalGameTime.TotalSeconds;
@@ -59,7 +60,7 @@ namespace Snake
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            _gameManager.Draw();
+            GameManager.Draw();
             base.Draw(gameTime);
             _spriteBatch.End();
         }

@@ -12,6 +12,7 @@ namespace Snake
     {
         public static SpriteBatch SpriteBatch { get; set; }
         public static float Time { get; set; }
+        public static Game1 Game { get; set; }
 
     }
 }

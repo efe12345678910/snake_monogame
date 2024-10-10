@@ -21,8 +21,8 @@ namespace Snake
         public  Rectangle GameArena { get; }
         public void CreateFood()
         {
-            int a = random.Next(0, (int)GameArena.Width / (int)GridSize.X);
-            int b = random.Next(0, (int)GameArena.Height / (int)GridSize.Y);
+            int a = random.Next(1, (int)GameArena.Width / (int)GridSize.X);
+            int b = random.Next(1, (int)GameArena.Height / (int)GridSize.Y);
             Vector2 position = new Vector2(a*GridSize.X, b * GridSize.Y);
             Rectangle rectangle = new Rectangle(position.ToPoint(), GridSize.ToPoint());
             //If snake is at the position , find another position (we do not want to create the food on the snake)

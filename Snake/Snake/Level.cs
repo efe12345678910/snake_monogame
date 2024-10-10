@@ -19,7 +19,7 @@ namespace Snake
         private readonly Random random;
         public Food Food { get; private set; }
         public  Rectangle GameArena { get; }
-        private Food CreateFood()
+        public void CreateFood()
         {
             int a = random.Next(0, (int)GameArena.Width / (int)GridSize.X);
             int b = random.Next(0, (int)GameArena.Height / (int)GridSize.Y);
@@ -29,12 +29,16 @@ namespace Snake
             if (!DoesGivenRecIntersectsWithSnakeParts(rectangle))
             {
                 //Create the food
-                return new Food(rectangle.Location.ToVector2(),GridSize);
+                if (Food is null)
+                {
+                    Food = new Food(rectangle.Location.ToVector2(), GridSize);
+                }
+                else Food.ChangeFoodLocation(rectangle.Location.ToVector2());
             }
             else
             {
                 //Find another position to create the food
-                return CreateFood();
+                CreateFood();
             }
 
         }
@@ -66,7 +70,7 @@ namespace Snake
             _levelColumns = Globals.SpriteBatch.GraphicsDevice.Viewport.Height / (int)GridSize.Y;
             GameArena = new Rectangle(GridSize.ToPoint().X,GridSize.ToPoint().Y, Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Width-(int)GridSize.X*2,Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Height-(int)GridSize.Y *2);
             Snake = new Snake(this);
-            Food = CreateFood();
+            CreateFood();
 
         }
 
@@ -80,6 +84,7 @@ namespace Snake
         {
             Snake.Update();
         }
+        
         [Obsolete("This method is deprecated, use DrawBackground instead.This method draws the walls of the level piece by piece so it is not well optimized.")]
         private void DrawS()
         {

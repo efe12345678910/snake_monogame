@@ -15,11 +15,11 @@ namespace Snake
         public readonly Texture2D Texture;
         private Level _level;
         private DirectionFacing _currentDirection =DirectionFacing.Right;
-        private float _movementInterval = 0.5f;
+        private float _movementInterval = 0.05f;
         private float _lastMovementTime;
         private bool _hasAlreadyTurned = false;
-        public int SnakeLength { get; private set; }
         private int _snakeStartingLenght = 5;
+        public Vector2 LastPositionOfLastSnakePart { get; private set; }
         private Vector2 _startingPosition = new Vector2(60, 10);
         public Vector2 PositionHead { get; private set; }
         public List<Rectangle> SnakeParts { get; private set; } = new List<Rectangle>();
@@ -27,7 +27,6 @@ namespace Snake
         public Snake(Level level)
         {
             Texture = Contents.GetTexture2D(TextureName.Snake);
-            SnakeLength = _snakeStartingLenght;
             PositionHead = _startingPosition;
             _level = level;
             _lastMovementTime = Globals.Time;
@@ -38,11 +37,11 @@ namespace Snake
         }
         private void InitializePositionsAndRects()
         {
-            for(int i = 0; i < SnakeLength; i++)
+            for(int i = 0; i < _snakeStartingLenght; i++)
             {
                 Positions.Insert(0, new Vector2(PositionHead.X - i * _level.GridSize.X, PositionHead.Y));
             }
-            for (int i=0; i < SnakeLength; i++)
+            for (int i=0; i < _snakeStartingLenght; i++)
             {
                 SnakeParts.Insert(0, new Rectangle(Positions[i].ToPoint(), _level.GridSize.ToPoint()));
             }
@@ -58,6 +57,14 @@ namespace Snake
                 }
             }
         }
+        private bool CheckIfEatenFood()
+        {
+            if (SnakeParts[SnakeParts.Count - 1].Intersects(_level.Food.Rectangle))
+            {
+                return true;
+            }
+            else return false;
+        }
         public void Draw()
         {
             for (int i = 0; i<Positions.Count; i++)
@@ -72,6 +79,7 @@ namespace Snake
                 MoveForward();
                 _lastMovementTime = Globals.Time;
             }
+            CheckIfEatenFood();
         }
         
         //Take care that positive Y coordinate means down in Monogame
@@ -94,6 +102,7 @@ namespace Snake
                 default:
                     break;
             }
+            LastPositionOfLastSnakePart = SnakeParts[0].Location.ToVector2();
             Positions.RemoveAt(0);
             Positions.Insert(Positions.Count,PositionHead);
             for(int i = 0; i<Positions.Count; i++)
@@ -101,6 +110,13 @@ namespace Snake
                 SnakeParts[i] = new Rectangle(Positions[i].ToPoint(), _level.GridSize.ToPoint());
             }
             CheckCollision();
+            if (CheckIfEatenFood())
+            {
+                Debug.WriteLine("FOOD EATEN!");
+                Positions.Insert(0, LastPositionOfLastSnakePart);
+                SnakeParts.Insert(0, new Rectangle(LastPositionOfLastSnakePart.ToPoint(), _level.GridSize.ToPoint()));
+                _level.CreateFood();
+            }
             _hasAlreadyTurned = false;
         }
         public void TurnLeft()

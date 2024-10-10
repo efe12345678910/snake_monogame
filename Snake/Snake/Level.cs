@@ -17,6 +17,7 @@ namespace Snake
         private readonly int _levelColumns;
         private readonly Texture2D _wallTexture;
         private readonly Random random;
+        public  GameManager GameManager { get; }
         public Food Food { get; private set; }
         public  Rectangle GameArena { get; }
         public void CreateFood()
@@ -62,16 +63,16 @@ namespace Snake
         {
             Globals.SpriteBatch.Draw(_wallTexture, GameArena, Color.White);
         }
-        public Level()
+        public Level(GameManager gameManager)
         {
             random = new();
             _wallTexture = Contents.GetTexture2D(TextureName.Wall);
             _levelRows = Globals.SpriteBatch.GraphicsDevice.Viewport.Width / (int)GridSize.X;
             _levelColumns = Globals.SpriteBatch.GraphicsDevice.Viewport.Height / (int)GridSize.Y;
-            GameArena = new Rectangle(GridSize.ToPoint().X,GridSize.ToPoint().Y, Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Width-(int)GridSize.X*2,Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Height-(int)GridSize.Y *2);
+            GameArena = new Rectangle(GridSize.ToPoint().X, GridSize.ToPoint().Y, Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Width - (int)GridSize.X * 2, Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Height - (int)GridSize.Y * 2);
             Snake = new Snake(this);
             CreateFood();
-
+            GameManager = gameManager;
         }
 
         public void Draw()

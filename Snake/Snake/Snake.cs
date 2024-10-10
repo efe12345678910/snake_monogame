@@ -53,7 +53,7 @@ namespace Snake
             {
                 if (SnakeParts[i].Intersects(SnakeParts[SnakeParts.Count - 1])|| !_level.GameArena.Contains(SnakeParts[SnakeParts.Count - 1]))
                 {
-                    Debug.WriteLine("GAME OVER!");
+                    _level.GameManager.ChangeState(GameStateManager.GameStateEnum.GameOver);
                 }
             }
         }

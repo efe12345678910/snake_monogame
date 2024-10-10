@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Snake;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,26 +9,43 @@ namespace Snake
 {
     internal class GameManager
     {
+        public GameState GameState { get; private set; }
         public Level Level { get; private set; }
         public GameManager()
         {
-            Level = new Level();
+            ChangeState(GameStateManager.GameStateEnum.Play);
+            Level = new Level(this);
             InputManager.RKeyPressed += Restart;
+            InputManager.PauseKeyPressed += PauseTheGame;
         }
-
+        private void PauseTheGame()
+        {
+            if (GameState is not PauseState)
+            {
+                ChangeState(GameStateManager.GameStateEnum.Pause);
+            }
+            else
+            {
+                ChangeState(GameStateManager.GameStateEnum.Play);
+            }
+        }
+        public void ChangeState(GameStateManager.GameStateEnum gameState)
+        {
+            GameState = GameStateManager.gameStates[gameState];
+        }
         public void Update()
         {
             InputManager.Update();
-            Level.Update();
+            GameState.Update(this);
         }
         public void Draw()
         {
-            Level.Draw();
+            GameState.Draw(this);
         }
         public void Restart()
         {
-            InputManager.RKeyPressed -= Restart;
-            Level = new Level();
+            Level = new Level(this);
+            ChangeState(GameStateManager.GameStateEnum.Play);
         }
     }
 }

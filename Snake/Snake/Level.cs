@@ -17,24 +17,43 @@ namespace Snake
         private readonly int _levelColumns;
         private readonly Texture2D _wallTexture;
         private readonly Random random;
+        public Food Food { get; private set; }
         public  Rectangle GameArena { get; }
-        private void CreateFood()
+        private Food CreateFood()
         {
             int a = random.Next(0, (int)GameArena.Width / (int)GridSize.X);
             int b = random.Next(0, (int)GameArena.Height / (int)GridSize.Y);
             Vector2 position = new Vector2(a*GridSize.X, b * GridSize.Y);
+            Rectangle rectangle = new Rectangle(position.ToPoint(), GridSize.ToPoint());
             //If snake is at the position , find another position (we do not want to create the food on the snake)
-            if (Snake.Positions.Contains(position))
+            if (!DoesGivenRecIntersectsWithSnakeParts(rectangle))
             {
-                CreateFood();
+                //Create the food
+                return new Food(rectangle.Location.ToVector2(),GridSize);
             }
             else
             {
-                Debug.WriteLine(position+" food will be created");
+                //Find another position to create the food
+                return CreateFood();
             }
 
         }
-        
+        /// <summary>
+        /// Checks whether the given rectangle intersects with any of the snake parts
+        /// </summary>
+        /// <param name="rec"></param>
+        /// <returns></returns>
+        private bool DoesGivenRecIntersectsWithSnakeParts(Rectangle rec)
+        {
+            foreach (Rectangle r in Snake.SnakeParts)
+            {
+                if (r.Intersects(rec))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         private void DrawBackground()
         {
             Globals.SpriteBatch.Draw(_wallTexture, GameArena, Color.White);
@@ -47,12 +66,15 @@ namespace Snake
             _levelColumns = Globals.SpriteBatch.GraphicsDevice.Viewport.Height / (int)GridSize.Y;
             GameArena = new Rectangle(GridSize.ToPoint().X,GridSize.ToPoint().Y, Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Width-(int)GridSize.X*2,Globals.SpriteBatch.GraphicsDevice.Viewport.Bounds.Height-(int)GridSize.Y *2);
             Snake = new Snake(this);
+            Food = CreateFood();
+
         }
 
         public void Draw()
         {
             DrawBackground();
             Snake.Draw();
+            Food.Draw();
         }
         public void Update()
         {

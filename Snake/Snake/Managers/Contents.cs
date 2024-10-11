@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace Snake
 {
     public enum TextureName { Snake,Wall, Intro, Button}
+    public enum FontName { Default }
     internal static class Contents
     {
         public static ContentManager Content { get; set; }
@@ -17,12 +18,14 @@ namespace Snake
         private static Texture2D _wallTexture;
         private static Texture2D _introTexture;
         private static Texture2D _buttonTexture;
+        private static SpriteFont _defaultFont;
         public static Dictionary<TextureName, Texture2D> TextureDict { get; private set; } = new Dictionary<TextureName, Texture2D>();
-        
+        public static Dictionary<FontName, SpriteFont> FontDict { get; private set; } = new Dictionary<FontName, SpriteFont>();
+
         static Contents()
         {
-            
-            
+
+
         }
         public static void Init()
         {
@@ -30,6 +33,8 @@ namespace Snake
             _wallTexture = Content.Load<Texture2D>("Art/Level/wall");
             _introTexture = Content.Load<Texture2D>("Art/Intro/intro_screen");
             _buttonTexture = Content.Load<Texture2D>("Art/Intro/button");
+            _defaultFont = Content.Load<SpriteFont>("Art/Fonts/font");
+            FontDict.Add(FontName.Default, _defaultFont);
             TextureDict.Add(TextureName.Button, _buttonTexture);
             TextureDict.Add(TextureName.Wall, _wallTexture);
             TextureDict.Add(TextureName.Snake, _snakeTexture);
@@ -38,6 +43,10 @@ namespace Snake
         public static Texture2D GetTexture2D(TextureName name)
         {
             return TextureDict[name];
+        }
+        public static SpriteFont GetFont(FontName name)
+        {
+            return FontDict[name];
         }
     }
 }

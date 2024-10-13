@@ -11,6 +11,7 @@ namespace Snake
 {
     internal class Snake
     {
+        public int Score { get; private set; }
         public enum DirectionFacing {Right, Up, Left, Down}
         public readonly Texture2D Texture;
         private Level _level;
@@ -33,6 +34,7 @@ namespace Snake
             InitializePositionsAndRects();
             InputManager.RightArrowPressed += TurnRight;
             InputManager.LeftArrowPressed += TurnLeft;
+            Debug.WriteLine("Snake created");
 
         }
         private void InitializePositionsAndRects()
@@ -61,6 +63,7 @@ namespace Snake
         {
             if (SnakeParts[SnakeParts.Count - 1].Intersects(_level.Food.Rectangle))
             {
+                Score++;
                 return true;
             }
             else return false;

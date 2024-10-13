@@ -16,7 +16,8 @@ namespace Snake
         public IntroMenuState()
         {
             _introBackground = Contents.TextureDict[TextureName.Intro];
-            _newGameButton = new Button();
+            _newGameButton = new PlayButton("Play",new Vector2(400,100));
+            buttons.Add(_newGameButton);
         }
         public override void Update(GameManager gm)
         {

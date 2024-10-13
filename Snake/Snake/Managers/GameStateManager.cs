@@ -24,5 +24,6 @@ namespace Snake
             gameStates.Add(GameStateEnum.GameOver, new GameOverState());
             gameStates.Add(GameStateEnum.Intro, new IntroMenuState());
         }
+        
     }
 }

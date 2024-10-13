@@ -31,7 +31,13 @@ namespace Snake
         }
         public void ChangeState(GameStateManager.GameStateEnum gameState)
         {
+            GameState?.DeactivateButtons();
+            if (gameState is GameStateManager.GameStateEnum.Play)
+            {
+                Level = new Level(this);
+            }
             GameState = GameStateManager.gameStates[gameState];
+            GameState?.ActivateButtons();
         }
         public void Update()
         {
@@ -44,7 +50,6 @@ namespace Snake
         }
         public void Restart()
         {
-            Level = new Level(this);
             ChangeState(GameStateManager.GameStateEnum.Play);
         }
     }
